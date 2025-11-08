@@ -1,14 +1,13 @@
-use gtk::{gdk::Key, prelude::{EditableExt, WidgetExt}, EventControllerKey};
 use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 use gtk::{
-    prelude::{BoxExt, GtkWindowExt},
+    prelude::{BoxExt, GtkWindowExt, WidgetExt},
     Application, ApplicationWindow, Box as BoxGtk, Entry,
 };
 
 use crate::{
     category::Category,
-    services::get_search_service,
+    services::{get_search_service, setup_keyboard_controller},
     ui::{create_category_nav, create_emoji_grid_section, create_top_bar},
     utils::{clipboard_manager::ClipboardManager, load_emoji_for_category},
 };
@@ -73,34 +72,7 @@ pub fn build_ui(app: &Application, cb_manager: ClipboardManager) {
     main_box.append(&category_nav);
     main_box.append(&emoji_grid_widget);
 
-    let key_controller = EventControllerKey::new();
-    let window_clone = window.clone();
-
-    key_controller.connect_key_pressed(move |_controller, key, _keycode, _state| {
-        if key == Key::Escape {
-            window_clone.close();
-            return gtk::glib::Propagation::Stop;
-        }
-        
-        if let Some(unicode) = key.to_unicode() {
-            let search_input = search_input_rc.borrow();
-            if !search_input.has_focus() {
-                search_input.grab_focus();
-                
-                // Insertar el carácter manualmente
-                let current_text = search_input.text();
-                let cursor_pos = search_input.position();
-                let mut new_text = current_text.to_string();
-                new_text.insert(cursor_pos as usize, unicode);
-                search_input.set_text(&new_text);
-                search_input.set_position(cursor_pos + 1);
-                
-                return gtk::glib::Propagation::Stop;
-            }
-        }
-        
-        gtk::glib::Propagation::Proceed
-    });
+    let key_controller = setup_keyboard_controller(&window, search_input_rc.clone());
 
     window.add_controller(key_controller);
     window.present();

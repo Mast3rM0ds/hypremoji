@@ -7,6 +7,10 @@ use clap::{Parser, Subcommand, ValueEnum};
 pub struct Cli {
     #[command(subcommand)]
     pub command: Option<Commands>,
+    
+    /// Custom CSS file path (e.g., /path/to/dark.css or /path/to/light.css)
+    #[arg(short = 's', long = "style")]
+    pub style: Option<String>,
 }
 
 #[derive(Subcommand)]

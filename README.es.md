@@ -14,7 +14,7 @@ HyprEmoji es un selector de emojis ligero y rápido para el gestor de ventanas *
 - 📂 **Navegación por categorías:** Caritas, Animales, Comida, Objetos ¡y más!
 - 📋 **Copia automática con Ctrl+V** en la ventana enfocada.
 - 🧠 **Historial reciente:** los emojis más usados se guardan automáticamente.
-- 🎨 **Interfaz moderna y minimalista**, personalizable mediante CSS.
+- 🎨 **Interfaz moderna y minimalista**, personalizable mediante CSS (también al lanzamiento con `hypremoji -s <ruta>`).
 - 💾 **Recuerda el tamaño y posición de la ventana** entre sesiones.
 
 ## 📥 Instalación
@@ -94,6 +94,9 @@ HyprEmoji incluye una interfaz de línea de comandos para configuración:
 # Mostrar ayuda
 hypremoji --help
 
+# Lanzar con un CSS personalizado solo para esta sesión
+hypremoji -s ~/.config/hypremoji/dark.css
+
 # Resetear configuración a valores predeterminados (ventana sigue al cursor abajo)
 hypremoji reset
 
@@ -118,6 +121,8 @@ Puedes modificar el tema desde:
 ```bash
 ~/.config/hypremoji/style.css
 ```
+
+También puedes mantener varias variantes (por ejemplo, `dark.css`, `light.css`) y lanzar Hypremoji con cualquiera usando `hypremoji -s /ruta/al/tema.css`. Si quieres atar un tema específico a un atajo de Hyprland, edita la línea `bind = … hypremoji` correspondiente en tu configuración de Hyprland para añadir la bandera `-s` con el archivo deseado.
 
 #### Ejemplo:
 

@@ -14,7 +14,7 @@ A sleek way to copy emojis into any window on your system!
 - 📂 **Category navigation:** Smileys, Animals, Food, Objects, and more!
 - 📋 **Clipboard copy with auto Ctrl+V** into the focused window.
 - 🧠 **Recent history:** frequently used emojis are saved automatically.
-- 🎨 **Modern and minimal UI**, customizable through CSS.
+- 🎨 **Modern and minimal UI**, customizable through CSS (including on launch with `hypremoji -s <path>`).
 - 💾 **Remembers window size and position** across sessions.
 
 ## 📥 Installation
@@ -93,6 +93,9 @@ HyprEmoji includes a command-line interface for configuration:
 # Show help
 hypremoji --help
 
+# Launch with a custom CSS file for this session
+hypremoji -s ~/.config/hypremoji/dark.css
+
 # Reset configuration to defaults (window follows cursor below)
 hypremoji reset
 
@@ -117,6 +120,8 @@ You can tweak the theme via:
 ```bash
 ~/.config/hypremoji/style.css
 ```
+
+You can also keep multiple variants (for example, `dark.css`, `light.css`) and launch Hypremoji with any of them on demand using `hypremoji -s /path/to/theme.css`. If you want to bind a specific theme to a Hyprland shortcut, update the corresponding `bind = … hypremoji` line in your Hyprland config to append the `-s` flag with the desired file.
 
 #### Example:
 

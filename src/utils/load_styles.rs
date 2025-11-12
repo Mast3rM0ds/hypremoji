@@ -1,25 +1,34 @@
-use std::fs;
+use std::{fs, path::PathBuf};
 
 use gtk::{gdk::Display, CssProvider};
 
 use crate::utils::{get_config_dir, reset_css};
 
-pub fn load_css() -> Result<(), Box<dyn std::error::Error>> {
+pub fn load_css(custom_css_path: Option<&str>) -> Result<(), Box<dyn std::error::Error>> {
     let provider = CssProvider::new();
 
-    let config_dir_path = get_config_dir()?;
+    let css_path = if let Some(custom_path) = custom_css_path {
+        let path = PathBuf::from(custom_path);
+        if !path.exists() {
+            return Err(format!("CSS file not found: {}", path.display()).into());
+        }
+        path
+    } else {
+        let config_dir_path = get_config_dir()?;
+        let user_main_css_path = config_dir_path.join("style.css");
 
-    let user_main_css_path = config_dir_path.join("style.css");
+        if !user_main_css_path.exists() {
+            reset_css(&config_dir_path)?;
+            println!("Created default CSS at: {}", user_main_css_path.display());
+        }
 
-    if !user_main_css_path.exists() {
-        reset_css(&config_dir_path)?;
-        println!("Created default CSS at: {}", user_main_css_path.display());
-    }
+        user_main_css_path
+    };
 
-    provider.load_from_string(&fs::read_to_string(&user_main_css_path).unwrap_or_else(|_| {
+    provider.load_from_string(&fs::read_to_string(&css_path).unwrap_or_else(|_| {
         eprintln!(
-            "Failed to read main style file from '{}'. Using built-in default CSS instead.",
-            user_main_css_path.display()
+            "Failed to read style file from '{}'. Using built-in default CSS instead.",
+            css_path.display()
         );
         String::from(
             "/* Default window body and text color */ \

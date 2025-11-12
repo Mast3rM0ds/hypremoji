@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::env;
 use gtk::prelude::*;
 use gtk::Application;
 
@@ -28,8 +29,9 @@ fn main() {
         .application_id("dev.musagy.hypremoji")
         .build();
 
-    app.connect_startup(|_| {
-        if let Err(e) = load_css() {
+    let style_path = cli.style.clone();
+    app.connect_startup(move |_| {
+        if let Err(e) = load_css(style_path.as_deref()) {
             eprintln!("Error loading CSS: {}", e);
         }
     });
@@ -38,7 +40,8 @@ fn main() {
     app.connect_activate(move |app| {
         build_ui(app, cb_manager_clone.clone());
     });
-    app.run();
+    let gtk_args: Vec<String> = env::args().take(1).collect();
+    app.run_with_args(&gtk_args);
 
     cb_manager.send_emoji_to_focused_window();
 }
